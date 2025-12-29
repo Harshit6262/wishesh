@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Her Voices</title>
+    <style>
+      body {
+        font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+        padding: 1rem;
+        background: #fff7fb;
+      }
+      h1 {
+        color: #ff69c9;
+        text-align: center;
+      }
+      .list {
+        max-width: 900px;
+        margin: 0 auto;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
+      .item {
+        background: #fff;
+        padding: 8px;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+      }
+      .topbar {
+        display: flex;
+        gap: 8px;
+        justify-content: center;
+        margin-bottom: 12px;
+      }
+      a.btn {
+        display: inline-block;
+        padding: 8px 12px;
+        background: #ff69c9;
+        color: #fff;
+        border-radius: 999px;
+        text-decoration: none;
+      }
+      .empty {
+        text-align: center;
+        color: #6b5b7e;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="topbar">
+      <a class="btn" href="index.html">← Back</a>
+      <a class="btn" id="clearAllBtn" href="#">Clear All</a>
+    </div>
+    <h1>Her Voices</h1>
+    <div id="list" class="list"></div>
+    <p id="empty" class="empty">Loading...</p>
+
+    <script>
+      const DB_NAME = "herMediaDB",
+        DB_VERSION = 1,
+        STORE = "voices";
+      function openDB() {
+        return new Promise((resolve, reject) => {
+          const r = indexedDB.open(DB_NAME, DB_VERSION);
+          r.onupgradeneeded = (e) => {
+            const db = e.target.result;
+            if (!db.objectStoreNames.contains(STORE))
+              db.createObjectStore(STORE, {
+                keyPath: "id",
+                autoIncrement: true,
+              });
+          };
+          r.onsuccess = (e) => resolve(e.target.result);
+          r.onerror = (e) => reject(e.target.error);
+        });
+      }
+      async function getAll() {
+        const db = await openDB();
+        return new Promise((res, rej) => {
+          const tx = db.transaction(STORE, "readonly");
+          const store = tx.objectStore(STORE);
+          const r = store.getAll();
+          r.onsuccess = () => res(r.result || []);
+          r.onerror = (e) => rej(e.target.error);
+        });
+      }
+      async function clearAll() {
+        const db = await openDB();
+        return new Promise((res, rej) => {
+          const tx = db.transaction(STORE, "readwrite");
+          const store = tx.objectStore(STORE);
+          const r = store.clear();
+          r.onsuccess = () => res();
+          r.onerror = (e) => rej(e.target.error);
+        });
+      }
+
+      function render(items) {
+        const list = document.getElementById("list");
+        list.innerHTML = "";
+        if (!items || items.length === 0) {
+          document.getElementById("empty").textContent = "No voice files yet.";
+          return;
+        }
+        document.getElementById("empty").textContent = "";
+        items.forEach((it) => {
+          const div = document.createElement("div");
+          div.className = "item";
+          const label = document.createElement("div");
+          label.textContent = it.name;
+          label.style.flex = "1";
+          const a = document.createElement("audio");
+          a.controls = true;
+          a.src = URL.createObjectURL(it.blob);
+          a.preload = "none";
+          div.appendChild(label);
+          div.appendChild(a);
+          list.appendChild(div);
+        });
+      }
+
+      document
+        .getElementById("clearAllBtn")
+        .addEventListener("click", async (e) => {
+          e.preventDefault();
+          if (!confirm("Clear all Her voices?")) return;
+          try {
+            await clearAll();
+            load();
+          } catch (err) {
+            alert("Clear failed");
+          }
+        });
+      async function load() {
+        document.getElementById("empty").textContent = "Loading...";
+        try {
+          const items = await getAll();
+          render(items);
+        } catch (e) {
+          document.getElementById("empty").textContent = "Failed to load";
+          console.error(e);
+        }
+      }
+      load();
+    </script>
+  </body>
+</html>

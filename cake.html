@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Happy Birthday Aashii 🎂</title>
+    <link rel="stylesheet" href="cake.css" />
+  </head>
+  <body>
+    <div style="text-align: center">
+      <h1>Happy Birthday, Aashii! 🎉</h1>
+      <p>Light the candle and blow to make a wish.</p>
+      <p class="hint">
+        Tip: Click "Enable Mic" and blow towards your mic to turn it off.
+      </p>
+    </div>
+
+    <div id="scene"></div>
+    <div id="balloonOverlay" aria-hidden="true"></div>
+
+    <div class="controls">
+      <button onclick="lightCandle()">Light / Relight</button>
+      <button onclick="blowOut()">Blow Out (manual)</button>
+      <button onclick="enableMic()">Enable Mic</button>
+      <button onclick="window.location.href='birthday.html'">
+        Back to Birthday
+      </button>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/examples/js/loaders/FontLoader.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/examples/js/geometries/TextGeometry.js"></script>
+    <script src="cake.js"></script>
+  </body>
+</html>

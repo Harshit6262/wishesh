@@ -1,0 +1,1616 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>The Babee ❤️</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      header {
+        position: sticky;
+        top: 0;
+        z-index: 50;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 1rem 2rem;
+        background: rgba(255, 240, 245, 0.9);
+        backdrop-filter: blur(8px);
+        border-bottom: 1px solid rgba(255, 105, 201, 0.3);
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+      }
+      .brand {
+        font-size: 5rem;
+        font-weight: 700;
+        color: #ff69c9;
+      }
+      header nav {
+        display: flex;
+        gap: 1.5rem;
+      }
+      header nav a {
+        color: #6b5b7e;
+        text-decoration: none;
+        transition: color 0.3s ease;
+        font-weight: 600;
+        font-size: 30px;
+      }
+      header nav a:hover {
+        color: #ff69c9;
+      }
+      .actions {
+        display: flex;
+        gap: 0.8rem;
+      }
+      .actions button {
+        background: #ffb3d9;
+        border: 1px solid #ff69c9;
+        color: #fff;
+        padding: 0.5rem 0.8rem;
+        border-radius: 999px;
+        cursor: pointer;
+        font-size: 1rem;
+        font-weight: 600;
+      }
+      .actions button:hover {
+        background: #ff69c9;
+      }
+      section {
+        padding: 3rem 1.5rem;
+        max-width: 1200px;
+        margin: 0 auto;
+      }
+      h2 {
+        text-align: center;
+        margin-bottom: 2rem;
+        font-size: 2rem;
+        color: #ff69c9;
+      }
+      .home {
+        text-align: center;
+        padding: 4rem 1.5rem;
+      }
+      .hero h1 {
+        font-size: clamp(2.5rem, 7vw, 5rem);
+        margin-bottom: 1rem;
+        background: linear-gradient(120deg, #f14ab4, #7dd7f7, #f19009);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+      .hero .heart {
+        display: inline-block;
+        animation: beat 1.2s ease-in-out infinite;
+        margin-left: 0.5rem;
+      }
+      @keyframes beat {
+        0%,
+        100% {
+          transform: scale(1);
+        }
+        35% {
+          transform: scale(1.25);
+        }
+        60% {
+          transform: scale(0.95);
+        }
+      }
+      .subtitle {
+        color: #8b7ba8;
+        font-size: 1.1rem;
+        margin-bottom: 2rem;
+      }
+      .cta {
+        display: flex;
+        gap: 1rem;
+        flex-wrap: wrap;
+        justify-content: center;
+        font-size:20px;
+      }
+      .btn {
+        padding: 0.75rem 1.5rem;
+        border: none;
+        border-radius: 999px;
+        background: linear-gradient(120deg, #ff69c9, #ffb347);
+        color: #fff;
+        font-weight: 700;
+        font-size: 25px;
+        cursor: pointer;
+        box-shadow: 0 8px 20px rgba(255, 105, 201, 0.3);
+        transition: all 0.3s ease;
+      }
+      .btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 12px 30px rgba(255, 105, 201, 0.5);
+      }
+      .btn.small {
+        padding: 0.6rem 1.2rem;
+        font-size: 0.95rem;
+      }
+      .timeline-section {
+        background: rgba(255, 179, 217, 0.1);
+        border-radius: 20px;
+      }
+      .timeline {
+        display: grid;
+        gap: 2rem;
+      }
+      .timeline .item {
+        display: grid;
+        grid-template-columns: 180px 1fr;
+        gap: 1.5rem;
+        align-items: center;
+        background: rgba(255, 255, 255, 0.7);
+        padding: 1.5rem;
+        border-radius: 16px;
+        border-left: 4px solid #ff69c9;
+        box-shadow: 0 4px 12px rgba(255, 105, 201, 0.15);
+      }
+      .timeline .item img {
+        width: 100%;
+        height: 140px;
+        object-fit: cover;
+        border-radius: 12px;
+        cursor: pointer;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+      }
+      .timeline .item img:hover {
+        transform: scale(1.05);
+        box-shadow: 0 8px 20px rgba(255, 105, 201, 0.3);
+      }
+
+      .stoic {
+        font-size: 30px;
+      }
+      .dil{
+        font-size: 20px;
+      }
+      .image-modal {
+        display: none;
+        position: fixed;
+        z-index: 9999;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.9);
+        justify-content: center;
+        align-items: center;
+      }
+      .image-modal.show {
+        display: flex;
+      }
+      .image-modal-content {
+        max-width: 90%;
+        max-height: 90%;
+        object-fit: contain;
+        border-radius: 10px;
+        animation: zoomIn 0.3s ease;
+      }
+      @keyframes zoomIn {
+        from {
+          transform: scale(0.8);
+          opacity: 0;
+        }
+        to {
+          transform: scale(1);
+          opacity: 1;
+        }
+      }
+      .image-modal-close {
+        position: absolute;
+        top: 20px;
+        right: 40px;
+        color: #fff;
+        font-size: 40px;
+        font-weight: bold;
+        cursor: pointer;
+        transition: color 0.3s ease;
+        z-index: 10001;
+      }
+      .image-modal-close:hover {
+        color: #ff69c9;
+      }
+      .modal-nav {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        background: rgba(255, 105, 201, 0.8);
+        color: #fff;
+        border: none;
+        border-radius: 50%;
+        width: 50px;
+        height: 50px;
+        font-size: 1.8rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        z-index: 10001;
+        display: none;
+      }
+      .modal-nav:hover {
+        background: #ff69c9;
+        transform: translateY(-50%) scale(1.1);
+      }
+      .modal-nav.prev {
+        left: 20px;
+      }
+      .modal-nav.next {
+        right: 20px;
+      }
+      .modal-nav.show {
+        display: block;
+      }
+      .timeline .item h3 {
+        color: #ff69c9;
+      }
+      .timeline .item p {
+        color: #6b5b7e;
+      }
+      .filters {
+        display: flex;
+        gap: 0.8rem;
+        justify-content: center;
+        margin-bottom: 2rem;
+        flex-wrap: wrap;
+      }
+      .filters .btn {
+        background: #fff;
+        color: #ff69c9;
+        border: 2px solid #ff69c9;
+        box-shadow: none;
+      }
+      .filters .btn:hover {
+        background: #ffb3d9;
+      }
+      .filters .btn.active {
+        background: linear-gradient(120deg, #ff69c9, #ffb347);
+        color: #fff;
+      }
+      .carousel {
+        position: relative;
+        max-width: 1000px;
+        margin: 0 auto;
+        overflow: hidden;
+        border-radius: 18px;
+        background: rgba(255, 240, 245, 0.8);
+        box-shadow: 0 8px 25px rgba(255, 105, 201, 0.2);
+      }
+      .carousel .track {
+        display: grid;
+        grid-auto-flow: column;
+        grid-auto-columns: 100%;
+        transition: transform 0.5s ease;
+      }
+      .carousel img {
+        width: 100%;
+        height: 520px;
+        object-fit: cover;
+        filter: saturate(1.1) contrast(1.08);
+        transition: transform 0.3s ease;
+        cursor: pointer;
+      }
+      .carousel img:hover {
+        transform: scale(1.05);
+        box-shadow: 0 10px 30px rgba(255, 105, 201, 0.4);
+      }
+      .carousel .nav {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        background: rgba(255, 105, 201, 0.7);
+        color: #fff;
+        border: 0;
+        border-radius: 50%;
+        width: 45px;
+        height: 45px;
+        font-size: 1.5rem;
+        cursor: pointer;
+        transition: background 0.3s ease;
+      }
+      .carousel .nav:hover {
+        background: rgba(255, 105, 201, 0.95);
+      }
+      .carousel .prev {
+        left: 15px;
+      }
+      .carousel .next {
+        right: 15px;
+      }
+      .messages-container {
+        max-width: 900px;
+        margin: 0 auto;
+        display: grid;
+        gap: 1.5rem;
+      }
+      .message-card {
+        background: rgba(255, 255, 255, 0.8);
+        padding: 1.5rem;
+        border-radius: 16px;
+        border-left: 4px solid #ff69c9;
+        box-shadow: 0 4px 12px rgba(255, 105, 201, 0.15);
+      }
+      .message-card .label {
+        color: #ff69c9;
+        font-size: 0.9rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        margin-bottom: 0.5rem;
+      }
+      .message-card p {
+        color: #2d1b4e;
+        font-size: 1rem;
+        line-height: 1.7;
+      }
+      .typing {
+        max-width: 900px;
+        margin: 0 auto;
+        background: rgba(255, 255, 255, 0.8);
+        padding: 2rem;
+        border-radius: 16px;
+        border: 2px solid #ff69c9;
+        min-height: 120px;
+        font-size: 1.3rem;
+        line-height: 1.8;
+        color: #ff69c9;
+        box-shadow: 0 8px 20px rgba(255, 105, 201, 0.2);
+        margin-bottom: 2rem;
+        font-style: italic;
+      }
+      .quiz {
+        max-width: 900px;
+        margin: 0 auto;
+        background: rgba(255, 255, 255, 0.8);
+        padding: 2rem;
+        border-radius: 16px;
+        box-shadow: 0 8px 20px rgba(255, 105, 201, 0.2);
+      }
+      .quiz .q {
+        margin-bottom: 1.5rem;
+      }
+      .quiz .q p {
+        margin-bottom: 0.8rem;
+        font-size: 1.1rem;
+        color: #2d1b4e;
+      }
+      .quiz .opt {
+        display: inline-block;
+        margin: 0.5rem;
+        padding: 0.8rem 1.2rem;
+        border-radius: 999px;
+        background: #fff;
+        border: 2px solid #ff69c9;
+        color: #ff69c9;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        font-weight: 600;
+      }
+      .quiz .opt:hover {
+        background: #ffb3d9;
+        color: #fff;
+      }
+      .quiz .opt.wrong {
+        animation: wiggle 0.35s ease;
+        background: #ff7a9a;
+        border-color: #ff7a9a;
+        color: #fff;
+      }
+      .quiz .opt.right {
+        background: #84f1a6;
+        border-color: #84f1a6;
+        color: #fff;
+      }
+      @keyframes wiggle {
+        0% {
+          transform: translateX(0);
+        }
+        33% {
+          transform: translateX(-6px);
+        }
+        66% {
+          transform: translateX(6px);
+        }
+        100% {
+          transform: translateX(0);
+        }
+      }
+      .quiz-result {
+        margin-top: 1rem;
+        text-align: center;
+        font-size: 1.2rem;
+        color: #ff69c9;
+        font-weight: 700;
+      }
+      .gifts {
+        display: flex;
+        gap: 1rem;
+        justify-content: center;
+        flex-wrap: wrap;
+        margin-bottom: 2rem;
+      }
+      .gift-canvas {
+        display: block;
+        max-width: 1000px;
+        margin: 0 auto;
+        width: 100%;
+        border-radius: 16px;
+        background: rgba(255, 255, 255, 0.8);
+        border: 2px solid #ff69c9;
+        box-shadow: 0 8px 20px rgba(255, 105, 201, 0.2);
+      }
+      .reasons-list {
+        max-width: 900px;
+        margin: 0 auto;
+        display: grid;
+        gap: 1rem;
+      }
+      .reason-item {
+        background: rgba(255, 255, 255, 0.8);
+        padding: 1rem 1.5rem;
+        border-radius: 12px;
+        border-left: 4px solid #ffb347;
+        box-shadow: 0 4px 12px rgba(255, 105, 201, 0.1);
+        color: #2d1b4e;
+      }
+      .reason-item strong {
+        color: #ff69c9;
+      }
+      @media (max-width: 768px) {
+        header {
+          padding: 1rem;
+          flex-direction: column;
+          gap: 1rem;
+        }
+        header nav {
+          gap: 1rem;
+          font-size: 0.9rem;
+        }
+        .timeline .item {
+          grid-template-columns: 1fr;
+        }
+        .carousel img {
+          height: 350px;
+        }
+        .carousel .nav {
+          width: 35px;
+          height: 35px;
+          font-size: 1.2rem;
+        }
+        .cta {
+          flex-direction: column;
+        }
+        .btn {
+          width: 100%;
+        }
+      }
+      /* Her section styles */
+      .her-section {
+        padding: 3rem 1.5rem;
+        max-width: 1200px;
+        margin: 0 auto 2rem;
+        background: linear-gradient(
+          180deg,
+          rgba(255, 240, 245, 0.6),
+          rgba(255, 245, 250, 0.6)
+        );
+        border-radius: 16px;
+        border: 1px solid rgba(255, 105, 201, 0.12);
+      }
+      .her-section .her-cards {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 1rem;
+        align-items: start;
+      }
+      .her-card {
+        background: rgba(255, 255, 255, 0.9);
+        padding: 1rem;
+        border-radius: 12px;
+        text-align: center;
+        box-shadow: 0 6px 18px rgba(255, 105, 201, 0.08);
+      }
+      .her-card img {
+        width: 100%;
+        height: 220px;
+        object-fit: cover;
+        border-radius: 10px;
+        margin-bottom: 0.75rem;
+      }
+      .her-card h4 {
+        color: #ff69c9;
+        margin-bottom: 0.5rem;
+      }
+      @media (max-width: 900px) {
+        .her-section .her-cards {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <div class="brand">💕 Aashii</div>
+      <nav>
+        <a href="#home">Home</a>
+        <a href="#timeline">Timeline</a>
+        <a href="#gallery">Gallery</a>
+        <a href="#messages">Messages</a>
+        <a href="#reasons">Why I Love You</a>
+        <a href="#quiz">Quiz</a>
+        <a href="#special">Special</a>
+      </nav>
+      <div class="actions">
+        <button onclick="alert('🌙 Dark mode coming soon!')">🌙</button>
+        <button onclick="alert('💌 Share on WhatsApp coming soon!')">🔗</button>
+      </div>
+    </header>
+
+    <section id="home" class="home">
+      <div class="hero">
+        <h1>To My Love... <span class="heart">💗</span></h1>
+        <p class="subtitle">
+          This is our love story, told in animations and memories.
+        </p>
+        <div class="cta">
+          <button class="btn" onclick="window.location.href='cake.html'">
+            🎂 Birthday Surprise
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <section id="timeline" class="timeline-section">
+      <h2>Our Timeline 👫</h2>
+      <div class="timeline">
+        <div class="item">
+          <img
+            src="WhatsApp Image 2025-12-29 at 2.26.13 AM.jpeg"
+            alt="First Meeting - The Stoic"
+            data-audio="firstMeeting"
+          />
+          <div>
+            <h3 class="stoic">11 May 2023 - First Meeting (The Stoic)</h3>
+            <p class="dil">
+              The day our hearts first connected. A moment we'll cherish
+              forever. Two souls meeting at the perfect time. ✨
+            </p>
+          </div>
+        </div>
+        <div class="item">
+          <img src="first date.jpeg" alt="First Date" data-audio="firstDate" />
+          <div>
+            <h3 class="stoic">17 May 2023 - First Date (Stoic_2.0 ..)</h3>
+            <p class="dil">
+              Our first adventure together—magical evening under the stars.
+              Every moment with you felt like a dream come true. 🌟
+            </p>
+          </div>
+        </div>
+        <div class="item">
+          <img src="confession.jpeg" data-audio="confession" />
+          <div>
+            <h3 class="stoic">20 May 2023- First And Forever Confession</h3>
+            <p class="dil">
+              Weekend getaway with endless laughs and beautiful memories.
+              Exploring the world becomes magical when you're by my side. 🌍
+            </p>
+          </div>
+        </div>
+        <div class="item">
+          <img src="sorry.jpeg" alt="‘Sorry’" data-audio="sorry" />
+          <div>
+            <h3 class="stoic">23 May 2023 - Fisrt Sorry (Not Delivered)</h3>
+            <p class="dil">
+              I never wanted our first fight to hurt you this much. I'm so
+              sorry, my love. Your smile is everything to me – let me make it
+              right. 🥺💕
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Image Modal for Full View -->
+    <div id="imageModal" class="image-modal" onclick="closeImageModal()">
+      <span class="image-modal-close" onclick="closeImageModal()">&times;</span>
+      <button
+        class="modal-nav prev"
+        id="modalPrev"
+        onclick="event.stopPropagation(); navigateModal(-1)"
+      >
+        ‹
+      </button>
+      <img
+        id="modalImage"
+        class="image-modal-content"
+        onclick="event.stopPropagation()"
+      />
+      <button
+        class="modal-nav next"
+        id="modalNext"
+        onclick="event.stopPropagation(); navigateModal(1)"
+      >
+        ›
+      </button>
+    </div>
+
+    <!-- Audio for Gallery Images -->
+    <audio id="galleryAudio" preload="auto">
+      <source
+        src="Piya O Re Piya Ringtone  Atif Aslam  Romantic Love Ringtone  SkRingtone306.mp3"
+        type="audio/mpeg"
+      />
+      Your browser does not support the audio element.
+    </audio>
+    <!-- Audio for First Meeting timeline image -->
+    <audio id="firstMeetingAudio" preload="auto">
+      <source
+        src="Nazar%20Na%20Lag%20Jaaye%20Ringtone%20_%20Stree%20_%20Ash%20King%20%26%20Sachin-Jigar%20_%20Latest%202018%20Hindi%20Ringtones%20%5BLW3MjK2PtFo%5D.mp3"
+        type="audio/mpeg"
+      />
+      Your browser does not support the audio element.
+    </audio>
+    <!-- Audio for First Date timeline image (NAIN song) -->
+    <audio id="firstDateAudio" preload="auto">
+      <source
+        src="NAIN%20SE%20NAINO%20KO%20MILA%20BLACK%20SCREEN%20STATUS%20LYRICS%20SUBSCRIBE.mp3"
+        type="audio/mpeg"
+      />
+      Your browser does not support the audio element.
+    </audio>
+    <!-- Audio for Confession timeline image (Kashish) -->
+    <audio id="confessionAudio" preload="auto">
+      <source
+        src="Kashish%20Song%20Ringtone%20%20New%20Ringtone%20%5BDownload%20link%20%5D%20%23ringtone%20%23song.mp3"
+        type="audio/mpeg"
+      />
+      Your browser does not support the audio element.
+    </audio>
+    <!-- Audio for Sorry timeline image (Barbaad) -->
+    <audio id="barbaadAudio" preload="auto">
+      <source
+        src="Barbaad Ringtone - Saiyaara  Jubin Nautiyal  Ahaan Panday,Aneet Padda  Saiyaara Ringtone.mp3"
+        type="audio/mpeg"
+      />
+      Your browser does not support the audio element.
+    </audio>
+
+    <section id="gallery" class="gallery-section">
+      <h2>Gallery 📸</h2>
+      <div class="filters">
+        <button class="btn small active" onclick="filterGallery('all')">
+          All
+        </button>
+        <button class="btn small" onclick="filterGallery('love')">
+          Love Moments
+        </button>
+        <button class="btn small" onclick="filterGallery('trip')">
+          Adventures
+        </button>
+      </div>
+      <div class="carousel">
+        <div class="track" id="carouselTrack">
+          <img src="sikayat.jpeg" data-tag="love" alt="Memory 1" />
+          <img src="yeah.jpeg" data-tag="trip" alt="Memory 2" />
+          <img src="Adayein.jpeg" data-tag="love" alt="Memory 3" />
+          <img src="cute.jpeg" data-tag="trip" alt="Memory 4" />
+          <img src="ek .jpeg" data-tag="trip" alt="Memory 5" />
+          <img src="mera.jpeg" data-tag="trip" alt="Memory 6" />
+          <img src="majestic.jpeg" data-tag="trip" alt="Memory 7" />
+        </div>
+        <button class="nav prev" onclick="scrollCarousel(-1)">‹</button>
+        <button class="nav next" onclick="scrollCarousel(1)">›</button>
+      </div>
+    </section>
+
+    <section id="messages" class="messages-section">
+      <h2>Messages 💌</h2>
+      <div class="typing" id="typing">
+        You are my greatest blessing and my favorite adventure...
+      </div>
+
+      <div class="messages-container">
+        <div class="message-card">
+          <div class="label ">💕 A Promise</div>
+          <p class="dil">
+            I promise to love you with all my heart, through every season of
+            life. You are my today and all of my tomorrows.
+          </p>
+        </div>
+        <div class="message-card">
+          <div class="label">✨ Why You</div>
+          <p class="dil">
+            Because you make me laugh when I want to cry. Because you believe in
+            me when I don't believe in myself. Because with you, I feel home.
+          </p>
+        </div>
+        <div class="message-card">
+          <div class="label">🌟 Forever</div>
+          <p class="dil">
+            I want to build a lifetime of memories with you. Growing old
+            together, hand in hand, always finding reasons to smile at each
+            other.
+          </p>
+        </div>
+        <div class="message-card">
+          <div class="label">💖 Today & Always</div>
+          <p class="dil">
+            Thank you for being my person. Thank you for loving me exactly as I
+            am. Happy Birthday to the woman who stole my heart and changed my
+            life.
+          </p>
+        </div>
+        <div class="message-card">
+          <div class="label">🎂 My Beautiful Love</div>
+          <p class="dil">
+            Today isn't just your birthday for me — it's the day the most beautiful part of my life came into existence. You have no idea how much peace your presence brings into my world. One smile from you can turn my worst day into something hopeful, and one thought of you is enough to calm my heart. I may not always find the perfect words, and I may have my flaws, but please know this — every silent prayer I make, every dream I dare to see, and every emotion I carry has you at its center.
+            <br><br>
+            You are not just someone I love; you are a feeling I carry with me everywhere. When life feels heavy and the world becomes overwhelming, it's the thought of you that keeps me standing strong. I admire your strength, your kindness, and the way you make even ordinary moments feel special without trying. I promise to keep choosing you, to grow into a better version of myself, and to stand by you in every season of life.
+            <br><br>
+            On your special day, I wish you endless happiness, peace that never fades, and dreams that come true one by one. Keep smiling the way you do, keep believing in yourself, and never forget that somewhere in this world, there is someone who loves you more deeply than words can ever explain.
+            <br><br>
+            Happy Birthday, my love. Today, tomorrow, and always — your happiness will mean everything to me 🎂❤️
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section id="reasons" class="reasons-section">
+      <h2>Why I Love You 💝</h2>
+      <div class="reasons-list">
+        <div class="reason-item">
+          ✨ <strong>Your Smile:</strong> It lights up my world and makes every
+          bad day better in an instant.
+        </div>
+        <div class="reason-item">
+          💪 <strong>Your Strength:</strong> The way you face challenges with
+          courage inspires me to be braver.
+        </div>
+        <div class="reason-item">
+          🎯 <strong>Your Dreams:</strong> I love how you pursue your goals and
+          never give up on what matters to you.
+        </div>
+        <div class="reason-item">
+          🤝 <strong>Your Kindness:</strong> The gentle way you treat everyone
+          around you shows the beauty of your soul.
+        </div>
+        <div class="reason-item">
+          😂 <strong>Your Humor:</strong> You make me laugh so hard my cheeks
+          hurt, and those are my favorite moments.
+        </div>
+        <div class="reason-item">
+          🎶 <strong>Your Voice:</strong> Whether you're talking or singing,
+          every word feels like music to my ears.
+        </div>
+        <div class="reason-item">
+          ❤️ <strong>Your Heart:</strong> So pure, so loving, so full of
+          compassion for everyone you care about.
+        </div>
+        <div class="reason-item">
+          🌈 <strong>Your Presence:</strong> Being near you feels like coming
+          home. You are my safe place, my comfort, my everything.
+        </div>
+      </div>
+    </section>
+
+    <section id="quiz" class="quiz-section">
+      <h2>Quiz 🎯</h2>
+      <div class="quiz">
+        <div class="q">
+          <p class="dil">When did we first meet?</p>
+          <span class="opt" onclick="checkAnswer(this, true)"
+            >January 2024</span
+          >
+          <span class="opt" onclick="checkAnswer(this, false)"
+            >February 2024</span
+          >
+          <span class="opt" onclick="checkAnswer(this, false)">March 2024</span>
+        </div>
+        <div class="q">
+          <p class="dil">What makes you smile the most?</p>
+          <span class="opt" onclick="checkAnswer(this, false)">Money</span>
+          <span class="opt" onclick="checkAnswer(this, true)"
+            >Spending time together</span
+          >
+          <span class="opt" onclick="checkAnswer(this, false)"
+            >Social media</span
+          >
+        </div>
+        <div class="q">
+          <p class="dil">Our favorite memory is?</p>
+          <span class="opt" onclick="checkAnswer(this, true)"
+            >All of them equally</span
+          >
+          <span class="opt" onclick="checkAnswer(this, false)"
+            >Just the big ones</span
+          >
+          <span class="opt" onclick="checkAnswer(this, false)"
+            >Only recent ones</span
+          >
+        </div>
+      </div>
+      <div class="quiz-result" id="quizResult"></div>
+    </section>
+
+    <section id="special" class="special-section">
+      <h2>Special Surprise 🎁</h2>
+      <div class="gifts">
+        <button
+          class="btn"
+          onclick="alert('💍 Virtual Ring - A symbol of my eternal love for you!')"
+        >
+          💍 Virtual Ring
+        </button>
+        <button
+          class="btn"
+          onclick="alert('💐 A beautiful bouquet of roses for you, arranged with love!')"
+        >
+          💐 Bouquet
+        </button>
+        <button
+          class="btn"
+          onclick="alert('🎵 Special song playlist just for you - coming soon!')"
+        >
+          🎵 Love Playlist
+        </button>
+      </div>
+    </section>
+
+    <!-- Her Section: Photo, Voice, Video -->
+    <section id="her" class="her-section">
+      <h2>Her 💕</h2>
+      <div class="her-cards">
+        <div class="her-card" id="herPhotoCard">
+          <h4>Photos</h4>
+          <button class="btn small" id="addHerPhotosBtn">Add Photos</button>
+          <a
+            class="btn small"
+            href="her-gallery.html"
+            style="margin-left: 0.5rem"
+            >Open Her Photos</a
+          >
+          <input
+            id="herPhotoInput"
+            type="file"
+            accept="image/*"
+            multiple
+            style="display: none"
+          />
+          <div id="herPhotoMeta" style="margin-top: 0.75rem; text-align: left">
+            Photos added: <strong id="herPhotoCount">0</strong>
+          </div>
+          <!-- hidden list (used by gallery page) -->
+          <div id="herPhotoList" style="display: none"></div>
+          <p style="margin-top: 0.5rem">
+            Photos are saved persistently and viewed on the Her Photos page.
+          </p>
+        </div>
+
+        <div class="her-card" id="herVoiceCard">
+          <h4>Voice</h4>
+          <button class="btn small" id="addHerVoicesBtn">
+            Add Voice Files
+          </button>
+          <a
+            class="btn small"
+            href="her-voices.html"
+            style="margin-left: 0.5rem"
+            >Open Her Voices</a
+          >
+          <input
+            id="herVoiceInput"
+            type="file"
+            accept="audio/*"
+            multiple
+            style="display: none"
+          />
+          <div id="herVoiceMeta" style="margin-top: 0.75rem; text-align: left">
+            Voices added: <strong id="herVoiceCount">0</strong>
+          </div>
+          <!-- hidden list (used by voices page) -->
+          <div id="herVoiceList" style="display: none"></div>
+          <p style="margin-top: 0.5rem">
+            Voice files are saved persistently and viewed on the Her Voices
+            page.
+          </p>
+        </div>
+
+        <div class="her-card" id="herVideoCard">
+          <h4>Video</h4>
+          <button class="btn small" id="addHerVideosBtn">Add Videos</button>
+          <a
+            class="btn small"
+            href="her-videos.html"
+            style="margin-left: 0.5rem"
+            >Open Her Videos</a
+          >
+          <input
+            id="herVideoInput"
+            type="file"
+            accept="video/*"
+            multiple
+            style="display: none"
+          />
+          <div id="herVideoMeta" style="margin-top: 0.75rem; text-align: left">
+            Videos added: <strong id="herVideoCount">0</strong>
+          </div>
+          <!-- hidden list (used by videos page) -->
+          <div id="herVideoList" style="display: none"></div>
+          <p style="margin-top: 0.5rem">
+            Videos are saved persistently and viewed on the Her Videos page.
+          </p>
+        </div>
+      </div>
+
+      <!-- Modal for Her videos (reuses image-modal styles) -->
+      <div
+        id="herMediaModal"
+        class="image-modal"
+        onclick="closeHerMediaModal()"
+        style="display: none"
+      >
+        <span class="image-modal-close" onclick="closeHerMediaModal()"
+          >&times;</span
+        >
+        <div
+          style="
+            max-width: 90%;
+            max-height: 90%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+          "
+        >
+          <video
+            id="herModalVideo"
+            controls
+            style="max-width: 100%; max-height: 100%"
+          ></video>
+        </div>
+      </div>
+    </section>
+
+    <script>
+      let carouselIndex = 0;
+      let quizScore = 0;
+
+      function scrollCarousel(dir) {
+        const track = document.getElementById("carouselTrack");
+        const imgs = track.querySelectorAll("img");
+        carouselIndex += dir;
+        if (carouselIndex < 0) carouselIndex = 0;
+        if (carouselIndex > imgs.length - 1) carouselIndex = imgs.length - 1;
+        track.style.transform = `translateX(${-100 * carouselIndex}%)`;
+      }
+
+      function filterGallery(tag) {
+        const btns = document.querySelectorAll(".filters .btn");
+        btns.forEach((b) => b.classList.remove("active"));
+        event.target.classList.add("active");
+        const imgs = document.querySelectorAll(".carousel img");
+        imgs.forEach((img) => {
+          if (tag === "all" || img.dataset.tag === tag)
+            img.style.display = "block";
+          else img.style.display = "none";
+        });
+        carouselIndex = 0;
+        document.getElementById("carouselTrack").style.transform =
+          "translateX(0)";
+      }
+
+      function checkAnswer(el, isCorrect) {
+        if (isCorrect) {
+          el.classList.add("right");
+          quizScore++;
+        } else {
+          el.classList.add("wrong");
+        }
+        document.getElementById(
+          "quizResult"
+        ).textContent = `You got ${quizScore} correct! 🎉`;
+      }
+
+      window.addEventListener("load", () => {
+        const lines = [
+          "You are my greatest blessing and my favorite adventure...",
+          "Every day with you is a gift I'm grateful for...",
+          "Happy Birthday to my love, my life, my everything... 💕",
+        ];
+        let i = 0;
+        function type() {
+          const el = document.getElementById("typing");
+          const text = lines[i % lines.length];
+          el.textContent = "";
+          let j = 0;
+          const timer = setInterval(() => {
+            el.textContent += text[j++];
+            if (j > text.length) {
+              clearInterval(timer);
+              setTimeout(() => {
+                i++;
+                type();
+              }, 1500);
+            }
+          }, 40);
+        }
+        type();
+
+        // Add click event listeners to timeline images for full view
+        const timelineImages = document.querySelectorAll(".timeline .item img");
+        timelineImages.forEach((img) => {
+          img.addEventListener("click", (e) => {
+            e.stopPropagation();
+            const audioKey = img.dataset.audio || "";
+            openImageModal(img.src, false, -1, audioKey);
+          });
+        });
+
+        // Add click event listeners to carousel/memory images for full view
+        const carouselImages = document.querySelectorAll(".carousel img");
+        carouselImages.forEach((img, index) => {
+          img.addEventListener("click", (e) => {
+            e.stopPropagation();
+            openImageModal(img.src, true, index); // Pass index for navigation
+          });
+        });
+
+        // Keyboard navigation for modal
+        document.addEventListener("keydown", (e) => {
+          const modal = document.getElementById("imageModal");
+          if (modal.classList.contains("show")) {
+            if (e.key === "ArrowLeft") navigateModal(-1);
+            if (e.key === "ArrowRight") navigateModal(1);
+            if (e.key === "Escape") closeImageModal();
+          }
+        });
+      });
+
+      let currentGalleryIndex = -1;
+      let galleryImagesArray = [];
+
+      // Function to open image modal
+      function openImageModal(
+        imageSrc,
+        isGallery = false,
+        index = -1,
+        audioKey = ""
+      ) {
+        const modal = document.getElementById("imageModal");
+        const modalImg = document.getElementById("modalImage");
+        modal.classList.add("show");
+        modalImg.src = imageSrc;
+
+        // Show/hide navigation arrows for gallery
+        const prevBtn = document.getElementById("modalPrev");
+        const nextBtn = document.getElementById("modalNext");
+
+        if (isGallery && index >= 0) {
+          currentGalleryIndex = index;
+          galleryImagesArray = Array.from(
+            document.querySelectorAll(".carousel img")
+          );
+          prevBtn.classList.add("show");
+          nextBtn.classList.add("show");
+        } else {
+          currentGalleryIndex = -1;
+          prevBtn.classList.remove("show");
+          nextBtn.classList.remove("show");
+        }
+
+        // Play gallery audio or a timeline-specific audio (first meeting / first date)
+        const galleryAudio = document.getElementById("galleryAudio");
+        const firstAudio = document.getElementById("firstMeetingAudio");
+        const firstDateAudio = document.getElementById("firstDateAudio");
+        const confessionAudio = document.getElementById("confessionAudio");
+        const barbaadAudio = document.getElementById("barbaadAudio");
+
+        // Stop the other audio but do NOT pause the one we intend to play
+        if (isGallery) {
+          // opening a gallery image: stop timeline audio if playing
+          if (firstAudio) {
+            console.log(
+              "Stopping firstMeetingAudio because gallery is opening"
+            );
+            try {
+              firstAudio.pause();
+              firstAudio.currentTime = 0;
+            } catch (e) {
+              console.warn("Error stopping firstMeetingAudio:", e);
+            }
+          }
+        } else {
+          // opening a timeline image: stop gallery audio if playing
+          if (galleryAudio) {
+            console.log(
+              "Stopping galleryAudio because timeline image is opening"
+            );
+            try {
+              galleryAudio.pause();
+              galleryAudio.currentTime = 0;
+            } catch (e) {
+              console.warn("Error stopping galleryAudio:", e);
+            }
+          }
+        }
+
+        if (isGallery) {
+          if (galleryAudio) {
+            galleryAudio.currentTime = 0;
+            galleryAudio.play().catch((err) => {
+              console.warn("Gallery audio play failed:", err);
+            });
+          }
+        } else {
+          // If caller provided an audioKey (from data-audio), use it for exact matching
+          if (audioKey === "firstDate") {
+            // set explicit src from exact filename to avoid encoding/path issues
+            if (
+              firstDateAudio &&
+              (!firstDateAudio.src || firstDateAudio.src.indexOf("NAIN") === -1)
+            ) {
+              firstDateAudio.src =
+                "NAIN SE NAINO KO MILA  BLACK SCREEN STATUS LYRICS  SUBSCRIBE.mp3";
+              try {
+                firstDateAudio.load();
+              } catch (e) {
+                console.warn("firstDateAudio load failed:", e);
+              }
+            }
+            if (firstAudio) {
+              try {
+                firstAudio.pause();
+                firstAudio.currentTime = 0;
+              } catch (e) {
+                console.warn("Error stopping firstMeetingAudio:", e);
+              }
+            }
+            if (firstDateAudio) {
+              firstDateAudio.currentTime = 0;
+              console.log("Attempting to play firstDateAudio (by audioKey)");
+              firstDateAudio.play().catch((err) => {
+                console.warn("First date audio play failed:", err);
+              });
+              // diagnostic listeners
+              firstDateAudio.addEventListener("error", (ev) =>
+                console.error("firstDateAudio error event", ev)
+              );
+              firstDateAudio.addEventListener("canplay", () =>
+                console.log("firstDateAudio canplay")
+              );
+            }
+          } else if (audioKey === "firstMeeting") {
+            // ensure firstMeetingAudio has correct raw filename src if missing
+            if (
+              firstAudio &&
+              (!firstAudio.src || firstAudio.src.indexOf("Nazar") === -1)
+            ) {
+              firstAudio.src =
+                "Nazar Na Lag Jaaye Ringtone _ Stree _ Ash King & Sachin-Jigar _ Latest 2018 Hindi Ringtones [LW3MjK2PtFo].mp3";
+              try {
+                firstAudio.load();
+              } catch (e) {
+                console.warn("firstMeetingAudio load failed:", e);
+              }
+            }
+            if (firstDateAudio) {
+              try {
+                firstDateAudio.pause();
+                firstDateAudio.currentTime = 0;
+              } catch (e) {
+                console.warn("Error stopping firstDateAudio:", e);
+              }
+            }
+            if (firstAudio) {
+              firstAudio.currentTime = 0;
+              console.log("Attempting to play firstMeetingAudio (by audioKey)");
+              firstAudio.play().catch((err) => {
+                console.warn("First meeting audio play failed:", err);
+              });
+            }
+          } else if (audioKey === "confession") {
+            if (firstAudio) {
+              try {
+                firstAudio.pause();
+                firstAudio.currentTime = 0;
+              } catch (e) {
+                console.warn("Error stopping firstMeetingAudio:", e);
+              }
+            }
+            if (confessionAudio) {
+              // Prefer the resolved <source> URL (already encoded) to avoid
+              // raw filename issues with characters like '#'. If a <source>
+              // element exists, use its resolved src so the browser can load it.
+              try {
+                const srcEl = confessionAudio.querySelector("source");
+                if (srcEl && srcEl.src) {
+                  if (
+                    !confessionAudio.src ||
+                    confessionAudio.src.indexOf("Kashish") === -1
+                  ) {
+                    confessionAudio.src = srcEl.src;
+                    try {
+                      confessionAudio.load();
+                    } catch (e) {
+                      console.warn("confessionAudio load failed:", e);
+                    }
+                  }
+                }
+              } catch (e) {
+                console.warn("Error reading confession <source>:", e);
+              }
+
+              confessionAudio.currentTime = 0;
+              console.log("Attempting to play confessionAudio (by audioKey)");
+              confessionAudio.play().catch((err) => {
+                console.warn("Confession (Kashish) audio play failed:", err);
+              });
+              confessionAudio.addEventListener("error", (ev) =>
+                console.error("confessionAudio error event", ev)
+              );
+              confessionAudio.addEventListener("canplay", () =>
+                console.log("confessionAudio canplay")
+              );
+            }
+          } else if (audioKey === "sorry") {
+            if (firstAudio) {
+              try {
+                firstAudio.pause();
+                firstAudio.currentTime = 0;
+              } catch (e) {
+                console.warn("Error stopping firstMeetingAudio:", e);
+              }
+            }
+            if (barbaadAudio) {
+              if (
+                !barbaadAudio.src ||
+                barbaadAudio.src.indexOf("Barbaad") === -1
+              ) {
+                barbaadAudio.src =
+                  "Barbaad Ringtone - Saiyaara  Jubin Nautiyal  Ahaan Panday,Aneet Padda  Saiyaara Ringtone.mp3";
+                try {
+                  barbaadAudio.load();
+                } catch (e) {
+                  console.warn("barbaadAudio load failed:", e);
+                }
+              }
+              barbaadAudio.currentTime = 0;
+              console.log("Attempting to play barbaadAudio (by audioKey)");
+              barbaadAudio.play().catch((err) => {
+                console.warn("Barbaad audio play failed:", err);
+              });
+              barbaadAudio.addEventListener("error", (ev) =>
+                console.error("barbaadAudio error event", ev)
+              );
+              barbaadAudio.addEventListener("canplay", () =>
+                console.log("barbaadAudio canplay")
+              );
+            }
+          } else {
+            // fallback to previous filename/alt-text detection
+            const firstImgFilename =
+              "WhatsApp Image 2025-12-29 at 2.26.13 AM.jpeg";
+            const firstDateFilename = "first date.jpeg";
+            const wantsFirstDate =
+              imageSrc.toLowerCase().includes(firstDateFilename) ||
+              imageSrc.toLowerCase().includes("first date");
+            const wantsFirstMeeting =
+              imageSrc.includes(firstImgFilename) ||
+              imageSrc.toLowerCase().includes("first meeting");
+            if (wantsFirstDate && firstDateAudio) {
+              firstDateAudio.currentTime = 0;
+              console.log("Attempting to play firstDateAudio (fallback)");
+              firstDateAudio.play().catch((err) => {
+                console.warn("First date audio play failed:", err);
+              });
+            } else if (wantsFirstMeeting && firstAudio) {
+              firstAudio.currentTime = 0;
+              console.log("Attempting to play firstMeetingAudio (fallback)");
+              firstAudio.play().catch((err) => {
+                console.warn("First meeting audio play failed:", err);
+              });
+            }
+          }
+        }
+      }
+
+      // Function to navigate through gallery in modal
+      function navigateModal(direction) {
+        if (currentGalleryIndex < 0 || galleryImagesArray.length === 0) return;
+
+        currentGalleryIndex += direction;
+
+        // Loop around
+        if (currentGalleryIndex < 0)
+          currentGalleryIndex = galleryImagesArray.length - 1;
+        if (currentGalleryIndex >= galleryImagesArray.length)
+          currentGalleryIndex = 0;
+
+        const modalImg = document.getElementById("modalImage");
+        modalImg.src = galleryImagesArray[currentGalleryIndex].src;
+      }
+
+      // Function to close image modal
+      function closeImageModal() {
+        const modal = document.getElementById("imageModal");
+        modal.classList.remove("show");
+        currentGalleryIndex = -1;
+
+        // Pause and reset any playing audios
+        const audio = document.getElementById("galleryAudio");
+        if (audio) {
+          audio.pause();
+          audio.currentTime = 0;
+        }
+        const fm = document.getElementById("firstMeetingAudio");
+        if (fm) {
+          fm.pause();
+          fm.currentTime = 0;
+        }
+        const fd = document.getElementById("firstDateAudio");
+        if (fd) {
+          fd.pause();
+          fd.currentTime = 0;
+        }
+        const ca = document.getElementById("confessionAudio");
+        if (ca) {
+          ca.pause();
+          ca.currentTime = 0;
+        }
+      }
+      const ba = document.getElementById("barbaadAudio");
+      if (ba) {
+        ba.pause();
+        ba.currentTime = 0;
+      }
+      // Her section multi-file handlers with IndexedDB persistence
+      (function () {
+        const DB_NAME = "herMediaDB";
+        const DB_VERSION = 1;
+        const STORES = { photos: "photos", voices: "voices", videos: "videos" };
+
+        let dbPromise = null;
+
+        function openDB() {
+          if (dbPromise) return dbPromise;
+          dbPromise = new Promise((resolve, reject) => {
+            const req = indexedDB.open(DB_NAME, DB_VERSION);
+            req.onupgradeneeded = (e) => {
+              const db = e.target.result;
+              Object.values(STORES).forEach((s) => {
+                if (!db.objectStoreNames.contains(s))
+                  db.createObjectStore(s, {
+                    keyPath: "id",
+                    autoIncrement: true,
+                  });
+              });
+            };
+            req.onsuccess = (e) => resolve(e.target.result);
+            req.onerror = (e) => reject(e.target.error || e.target.result);
+          });
+          return dbPromise;
+        }
+
+        async function addFile(storeName, file) {
+          const db = await openDB();
+          return new Promise((resolve, reject) => {
+            const tx = db.transaction(storeName, "readwrite");
+            const store = tx.objectStore(storeName);
+            const entry = { name: file.name, type: file.type, blob: file }; // store blob directly
+            const req = store.add(entry);
+            req.onsuccess = () => resolve(req.result);
+            req.onerror = (e) => reject(e.target.error);
+          });
+        }
+
+        async function getAll(storeName) {
+          const db = await openDB();
+          return new Promise((resolve, reject) => {
+            const tx = db.transaction(storeName, "readonly");
+            const store = tx.objectStore(storeName);
+            const req = store.getAll();
+            req.onsuccess = () => resolve(req.result || []);
+            req.onerror = (e) => reject(e.target.error);
+          });
+        }
+
+        async function clearStore(storeName) {
+          const db = await openDB();
+          return new Promise((resolve, reject) => {
+            const tx = db.transaction(storeName, "readwrite");
+            const store = tx.objectStore(storeName);
+            const req = store.clear();
+            req.onsuccess = () => resolve();
+            req.onerror = (e) => reject(e.target.error);
+          });
+        }
+
+        // UI elements
+        const addPhotosBtn = document.getElementById("addHerPhotosBtn");
+        const photoInput = document.getElementById("herPhotoInput");
+        const photoList = document.getElementById("herPhotoList");
+
+        const addVoicesBtn = document.getElementById("addHerVoicesBtn");
+        const voiceInput = document.getElementById("herVoiceInput");
+        const voiceList = document.getElementById("herVoiceList");
+
+        const addVideosBtn = document.getElementById("addHerVideosBtn");
+        const videoInput = document.getElementById("herVideoInput");
+        const videoList = document.getElementById("herVideoList");
+
+        const herMediaModal = document.getElementById("herMediaModal");
+        const herModalVideo = document.getElementById("herModalVideo");
+
+        // helpers to render items
+        function createPhotoThumb(record) {
+          const url = URL.createObjectURL(record.blob);
+          const img = document.createElement("img");
+          img.src = url;
+          img.alt = record.name;
+          img.style.cursor = "pointer";
+          img.style.width = "100%";
+          img.style.height = "100%";
+          img.style.objectFit = "cover";
+          const wrapper = document.createElement("div");
+          wrapper.style.borderRadius = "8px";
+          wrapper.style.overflow = "hidden";
+          wrapper.style.height = "100px";
+          wrapper.appendChild(img);
+          img.addEventListener("click", (ev) => {
+            ev.stopPropagation();
+            openImageModal(url, false, -1, "");
+          });
+          return wrapper;
+        }
+
+        function createVoicePlayer(record) {
+          const url = URL.createObjectURL(record.blob);
+          const container = document.createElement("div");
+          container.style.display = "flex";
+          container.style.alignItems = "center";
+          container.style.gap = "0.5rem";
+          const label = document.createElement("div");
+          label.textContent = record.name;
+          label.style.flex = "1";
+          label.style.fontSize = "0.9rem";
+          const audio = document.createElement("audio");
+          audio.controls = true;
+          audio.src = url;
+          audio.preload = "none";
+          container.appendChild(label);
+          container.appendChild(audio);
+          return container;
+        }
+
+        function createVideoThumb(record) {
+          const url = URL.createObjectURL(record.blob);
+          const v = document.createElement("video");
+          v.src = url;
+          v.preload = "metadata";
+          v.style.width = "100%";
+          v.style.height = "100%";
+          v.style.objectFit = "cover";
+          v.muted = true;
+          v.playsInline = true;
+          v.controls = false;
+          const wrapper = document.createElement("div");
+          wrapper.style.cursor = "pointer";
+          wrapper.style.borderRadius = "8px";
+          wrapper.style.overflow = "hidden";
+          wrapper.style.height = "110px";
+          wrapper.appendChild(v);
+          v.addEventListener("loadeddata", () => {
+            try {
+              v.currentTime = 0.1;
+            } catch (err) {}
+          });
+          wrapper.addEventListener("click", (ev) => {
+            ev.stopPropagation();
+            openHerMediaModal(url);
+          });
+          return wrapper;
+        }
+
+        // load existing items from IDB
+        async function loadAll() {
+          try {
+            const photos = await getAll(STORES.photos);
+            // populate hidden list and update count
+            const photoCountEl = document.getElementById("herPhotoCount");
+            if (photoCountEl) photoCountEl.textContent = photos.length;
+            photos.forEach((r) => photoList.appendChild(createPhotoThumb(r)));
+
+            const voices = await getAll(STORES.voices);
+            const voiceCountEl = document.getElementById("herVoiceCount");
+            if (voiceCountEl) voiceCountEl.textContent = voices.length;
+            voices.forEach((r) => voiceList.appendChild(createVoicePlayer(r)));
+
+            const videos = await getAll(STORES.videos);
+            const videoCountEl = document.getElementById("herVideoCount");
+            if (videoCountEl) videoCountEl.textContent = videos.length;
+            videos.forEach((r) => videoList.appendChild(createVideoThumb(r)));
+          } catch (e) {
+            console.warn("Failed to load her media:", e);
+          }
+        }
+
+        // wire inputs
+        addPhotosBtn &&
+          addPhotosBtn.addEventListener("click", () => photoInput.click());
+        addVoicesBtn &&
+          addVoicesBtn.addEventListener("click", () => voiceInput.click());
+        addVideosBtn &&
+          addVideosBtn.addEventListener("click", () => videoInput.click());
+
+        photoInput &&
+          photoInput.addEventListener("change", async (e) => {
+            const files = Array.from(e.target.files || []);
+            for (const f of files) {
+              try {
+                await addFile(STORES.photos, f);
+                const last = (await getAll(STORES.photos)).pop();
+                photoList.appendChild(createPhotoThumb(last));
+              } catch (err) {
+                console.warn("Add photo failed:", err);
+              }
+            }
+            e.target.value = "";
+          });
+
+        voiceInput &&
+          voiceInput.addEventListener("change", async (e) => {
+            const files = Array.from(e.target.files || []);
+            for (const f of files) {
+              try {
+                await addFile(STORES.voices, f);
+                const last = (await getAll(STORES.voices)).pop();
+                voiceList.appendChild(createVoicePlayer(last));
+              } catch (err) {
+                console.warn("Add voice failed:", err);
+              }
+            }
+            e.target.value = "";
+          });
+
+        videoInput &&
+          videoInput.addEventListener("change", async (e) => {
+            const files = Array.from(e.target.files || []);
+            for (const f of files) {
+              try {
+                await addFile(STORES.videos, f);
+                const last = (await getAll(STORES.videos)).pop();
+                videoList.appendChild(createVideoThumb(last));
+              } catch (err) {
+                console.warn("Add video failed:", err);
+              }
+            }
+            e.target.value = "";
+          });
+
+        window.openHerMediaModal = function (url) {
+          if (!herMediaModal || !herModalVideo) return;
+          herModalVideo.src = url;
+          herModalVideo.currentTime = 0;
+          herMediaModal.style.display = "flex";
+          try {
+            herModalVideo.play().catch(() => {});
+          } catch (e) {}
+        };
+
+        window.closeHerMediaModal = function () {
+          if (!herMediaModal || !herModalVideo) return;
+          herModalVideo.pause();
+          herModalVideo.src = "";
+          herMediaModal.style.display = "none";
+        };
+
+        // initialize DB and load existing
+        openDB()
+          .then(loadAll)
+          .catch((e) => console.warn("DB open failed:", e));
+      })();
+    </script>
+  </body>
+</html>

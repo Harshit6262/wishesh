@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Her Videos</title>
+    <style>
+      body {
+        font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+        padding: 1rem;
+        background: #fff7fb;
+      }
+      h1 {
+        color: #ff69c9;
+        text-align: center;
+      }
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        gap: 10px;
+        max-width: 1100px;
+        margin: 0 auto;
+      }
+      .thumb {
+        border-radius: 8px;
+        overflow: hidden;
+        cursor: pointer;
+        height: 140px;
+        background: #fff;
+      }
+      .thumb video {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+      .topbar {
+        display: flex;
+        gap: 8px;
+        justify-content: center;
+        margin-bottom: 12px;
+      }
+      a.btn {
+        display: inline-block;
+        padding: 8px 12px;
+        background: #ff69c9;
+        color: #fff;
+        border-radius: 999px;
+        text-decoration: none;
+      }
+      .modal {
+        position: fixed;
+        inset: 0;
+        display: none;
+        background: rgba(0, 0, 0, 0.85);
+        align-items: center;
+        justify-content: center;
+        z-index: 9999;
+      }
+      .modal.show {
+        display: flex;
+      }
+      .modal video {
+        max-width: 92%;
+        max-height: 92%;
+        border-radius: 8px;
+      }
+      .empty {
+        text-align: center;
+        color: #6b5b7e;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="topbar">
+      <a class="btn" href="index.html">← Back</a>
+      <a class="btn" id="clearAllBtn" href="#">Clear All</a>
+    </div>
+    <h1>Her Videos</h1>
+    <div id="grid" class="grid"></div>
+    <p id="empty" class="empty">Loading...</p>
+
+    <div id="modal" class="modal" onclick="closeModal()">
+      <video id="modalVideo" controls></video>
+    </div>
+
+    <script>
+      const DB_NAME = "herMediaDB",
+        DB_VERSION = 1,
+        STORE = "videos";
+      function openDB() {
+        return new Promise((resolve, reject) => {
+          const r = indexedDB.open(DB_NAME, DB_VERSION);
+          r.onupgradeneeded = (e) => {
+            const db = e.target.result;
+            if (!db.objectStoreNames.contains(STORE))
+              db.createObjectStore(STORE, {
+                keyPath: "id",
+                autoIncrement: true,
+              });
+          };
+          r.onsuccess = (e) => resolve(e.target.result);
+          r.onerror = (e) => reject(e.target.error);
+        });
+      }
+      async function getAll() {
+        const db = await openDB();
+        return new Promise((res, rej) => {
+          const tx = db.transaction(STORE, "readonly");
+          const store = tx.objectStore(STORE);
+          const r = store.getAll();
+          r.onsuccess = () => res(r.result || []);
+          r.onerror = (e) => rej(e.target.error);
+        });
+      }
+      async function clearAll() {
+        const db = await openDB();
+        return new Promise((res, rej) => {
+          const tx = db.transaction(STORE, "readwrite");
+          const store = tx.objectStore(STORE);
+          const r = store.clear();
+          r.onsuccess = () => res();
+          r.onerror = (e) => rej(e.target.error);
+        });
+      }
+
+      function createThumb(it) {
+        const url = URL.createObjectURL(it.blob);
+        const wrapper = document.createElement("div");
+        wrapper.className = "thumb";
+        const v = document.createElement("video");
+        v.src = url;
+        v.preload = "metadata";
+        v.muted = true;
+        v.playsInline = true;
+        v.controls = false;
+        wrapper.appendChild(v);
+        v.addEventListener("loadeddata", () => {
+          try {
+            v.currentTime = 0.1;
+          } catch (e) {}
+        });
+        wrapper.addEventListener("click", (e) => {
+          e.stopPropagation();
+          openModal(url);
+        });
+        return wrapper;
+      }
+      function render(items) {
+        const g = document.getElementById("grid");
+        g.innerHTML = "";
+        if (!items || items.length === 0) {
+          document.getElementById("empty").textContent = "No videos yet.";
+          return;
+        }
+        document.getElementById("empty").textContent = "";
+        items.forEach((it) => g.appendChild(createThumb(it)));
+      }
+
+      function openModal(url) {
+        const m = document.getElementById("modal");
+        const mv = document.getElementById("modalVideo");
+        mv.src = url;
+        m.classList.add("show");
+        try {
+          mv.play().catch(() => {});
+        } catch (e) {}
+      }
+      function closeModal() {
+        const m = document.getElementById("modal");
+        const mv = document.getElementById("modalVideo");
+        mv.pause();
+        mv.src = "";
+        m.classList.remove("show");
+      }
+
+      document
+        .getElementById("clearAllBtn")
+        .addEventListener("click", async (e) => {
+          e.preventDefault();
+          if (!confirm("Clear all Her videos?")) return;
+          try {
+            await clearAll();
+            load();
+          } catch (err) {
+            alert("Clear failed");
+          }
+        });
+      async function load() {
+        document.getElementById("empty").textContent = "Loading...";
+        try {
+          const items = await getAll();
+          render(items);
+        } catch (e) {
+          document.getElementById("empty").textContent = "Failed to load";
+          console.error(e);
+        }
+      }
+      load();
+    </script>
+  </body>
+</html>
