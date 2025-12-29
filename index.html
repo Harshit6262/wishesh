@@ -109,7 +109,7 @@
         gap: 1rem;
         flex-wrap: wrap;
         justify-content: center;
-        font-size:20px;
+        font-size: 20px;
       }
       .btn {
         padding: 0.75rem 1.5rem;
@@ -166,7 +166,7 @@
       .stoic {
         font-size: 30px;
       }
-      .dil{
+      .dil {
         font-size: 20px;
       }
       .image-modal {
@@ -714,7 +714,7 @@
 
       <div class="messages-container">
         <div class="message-card">
-          <div class="label ">💕 A Promise</div>
+          <div class="label">💕 A Promise</div>
           <p class="dil">
             I promise to love you with all my heart, through every season of
             life. You are my today and all of my tomorrows.
@@ -746,13 +746,31 @@
         <div class="message-card">
           <div class="label">🎂 My Beautiful Love</div>
           <p class="dil">
-            Today isn't just your birthday for me — it's the day the most beautiful part of my life came into existence. You have no idea how much peace your presence brings into my world. One smile from you can turn my worst day into something hopeful, and one thought of you is enough to calm my heart. I may not always find the perfect words, and I may have my flaws, but please know this — every silent prayer I make, every dream I dare to see, and every emotion I carry has you at its center.
-            <br><br>
-            You are not just someone I love; you are a feeling I carry with me everywhere. When life feels heavy and the world becomes overwhelming, it's the thought of you that keeps me standing strong. I admire your strength, your kindness, and the way you make even ordinary moments feel special without trying. I promise to keep choosing you, to grow into a better version of myself, and to stand by you in every season of life.
-            <br><br>
-            On your special day, I wish you endless happiness, peace that never fades, and dreams that come true one by one. Keep smiling the way you do, keep believing in yourself, and never forget that somewhere in this world, there is someone who loves you more deeply than words can ever explain.
-            <br><br>
-            Happy Birthday, my love. Today, tomorrow, and always — your happiness will mean everything to me 🎂❤️
+            Today isn't just your birthday for me — it's the day the most
+            beautiful part of my life came into existence. You have no idea how
+            much peace your presence brings into my world. One smile from you
+            can turn my worst day into something hopeful, and one thought of you
+            is enough to calm my heart. I may not always find the perfect words,
+            and I may have my flaws, but please know this — every silent prayer
+            I make, every dream I dare to see, and every emotion I carry has you
+            at its center.
+            <br /><br />
+            You are not just someone I love; you are a feeling I carry with me
+            everywhere. When life feels heavy and the world becomes
+            overwhelming, it's the thought of you that keeps me standing strong.
+            I admire your strength, your kindness, and the way you make even
+            ordinary moments feel special without trying. I promise to keep
+            choosing you, to grow into a better version of myself, and to stand
+            by you in every season of life.
+            <br /><br />
+            On your special day, I wish you endless happiness, peace that never
+            fades, and dreams that come true one by one. Keep smiling the way
+            you do, keep believing in yourself, and never forget that somewhere
+            in this world, there is someone who loves you more deeply than words
+            can ever explain.
+            <br /><br />
+            Happy Birthday, my love. Today, tomorrow, and always — your
+            happiness will mean everything to me 🎂❤️
           </p>
         </div>
       </div>
@@ -862,6 +880,25 @@
     <!-- Her Section: Photo, Voice, Video -->
     <section id="her" class="her-section">
       <h2>Her 💕</h2>
+      <div
+        class="cta"
+        style="justify-content: flex-start; margin-bottom: 0.75rem"
+      >
+        <button class="btn small" id="exportHerMediaBtn">Export Media</button>
+        <button
+          class="btn small"
+          id="importHerMediaBtn"
+          style="margin-left: 0.5rem"
+        >
+          Import Media
+        </button>
+        <input
+          id="importHerMediaInput"
+          type="file"
+          accept="application/json"
+          style="display: none"
+        />
+      </div>
       <div class="her-cards">
         <div class="her-card" id="herPhotoCard">
           <h4>Photos</h4>
@@ -1440,6 +1477,11 @@
         const videoInput = document.getElementById("herVideoInput");
         const videoList = document.getElementById("herVideoList");
 
+        // export/import controls
+        const exportBtn = document.getElementById("exportHerMediaBtn");
+        const importBtn = document.getElementById("importHerMediaBtn");
+        const importInput = document.getElementById("importHerMediaInput");
+
         const herMediaModal = document.getElementById("herMediaModal");
         const herModalVideo = document.getElementById("herModalVideo");
 
@@ -1536,6 +1578,132 @@
           }
         }
 
+        // helpers for export/import
+        function blobToBase64(blob) {
+          return new Promise((resolve, reject) => {
+            try {
+              const reader = new FileReader();
+              reader.onload = () => {
+                const res = reader.result || "";
+                const commaIdx = String(res).indexOf(",");
+                // strip data URL prefix if present
+                resolve(
+                  commaIdx >= 0 ? String(res).slice(commaIdx + 1) : String(res)
+                );
+              };
+              reader.onerror = reject;
+              reader.readAsDataURL(blob);
+            } catch (e) {
+              reject(e);
+            }
+          });
+        }
+
+        function b64ToBlob(b64, type) {
+          try {
+            const byteChars = atob(b64);
+            const byteNums = new Array(byteChars.length);
+            for (let i = 0; i < byteChars.length; i++)
+              byteNums[i] = byteChars.charCodeAt(i);
+            const byteArray = new Uint8Array(byteNums);
+            return new Blob([byteArray], {
+              type: type || "application/octet-stream",
+            });
+          } catch (e) {
+            console.warn("b64ToBlob failed", e);
+            return new Blob([]);
+          }
+        }
+
+        async function exportAll() {
+          try {
+            const photos = await getAll(STORES.photos);
+            const voices = await getAll(STORES.voices);
+            const videos = await getAll(STORES.videos);
+
+            async function convert(list) {
+              const out = [];
+              for (const r of list) {
+                try {
+                  out.push({
+                    name: r.name,
+                    type: r.type,
+                    b64: await blobToBase64(r.blob),
+                  });
+                } catch (e) {
+                  console.warn("Failed to convert record", r && r.name, e);
+                }
+              }
+              return out;
+            }
+
+            const payload = {
+              version: 1,
+              exportedAt: new Date().toISOString(),
+              photos: await convert(photos),
+              voices: await convert(voices),
+              videos: await convert(videos),
+            };
+
+            const blob = new Blob([JSON.stringify(payload, null, 2)], {
+              type: "application/json",
+            });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement("a");
+            a.href = url;
+            a.download = "herMediaBackup.json";
+            document.body.appendChild(a);
+            a.click();
+            setTimeout(() => {
+              URL.revokeObjectURL(url);
+              a.remove();
+            }, 0);
+          } catch (e) {
+            console.warn("Export failed", e);
+          }
+        }
+
+        async function importAllFromJson(json) {
+          try {
+            const lists = [
+              { key: "photos", store: STORES.photos },
+              { key: "voices", store: STORES.voices },
+              { key: "videos", store: STORES.videos },
+            ];
+            for (const { key, store } of lists) {
+              const arr = Array.isArray(json[key]) ? json[key] : [];
+              for (const item of arr) {
+                try {
+                  const blob = b64ToBlob(
+                    item.b64 || "",
+                    item.type || "application/octet-stream"
+                  );
+                  const file = new File(
+                    [blob],
+                    item.name || `${key}-${Date.now()}`,
+                    { type: item.type || "" }
+                  );
+                  await addFile(store, file);
+                } catch (e) {
+                  console.warn(
+                    "Import entry failed",
+                    key,
+                    item && item.name,
+                    e
+                  );
+                }
+              }
+            }
+            // refresh UI
+            photoList.innerHTML = "";
+            voiceList.innerHTML = "";
+            videoList.innerHTML = "";
+            await loadAll();
+          } catch (e) {
+            console.warn("Import failed", e);
+          }
+        }
+
         // wire inputs
         addPhotosBtn &&
           addPhotosBtn.addEventListener("click", () => photoInput.click());
@@ -1543,6 +1711,27 @@
           addVoicesBtn.addEventListener("click", () => voiceInput.click());
         addVideosBtn &&
           addVideosBtn.addEventListener("click", () => videoInput.click());
+
+        // wire export/import
+        exportBtn && exportBtn.addEventListener("click", exportAll);
+        importBtn &&
+          importBtn.addEventListener(
+            "click",
+            () => importInput && importInput.click()
+          );
+        importInput &&
+          importInput.addEventListener("change", async (e) => {
+            const f = (e.target.files || [])[0];
+            if (!f) return;
+            try {
+              const text = await f.text();
+              const json = JSON.parse(text);
+              await importAllFromJson(json);
+            } catch (err) {
+              console.warn("Import read failed", err);
+            }
+            e.target.value = "";
+          });
 
         photoInput &&
           photoInput.addEventListener("change", async (e) => {
